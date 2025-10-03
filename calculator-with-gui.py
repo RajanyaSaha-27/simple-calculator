@@ -52,7 +52,7 @@ class ScientificCalculatorGUI:
         button_texts = ['7', '8', '9',
                         '4', '5', '6',
                         '1', '2', '3',
-                        None, '0']
+                        None, '0', '.']
 
         row_val, col_val = 2, 0
         for text in button_texts:
