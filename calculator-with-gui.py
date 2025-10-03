@@ -1,5 +1,26 @@
 import tkinter as tk
-from math import sqrt, sin, cos, tan, exp, log, pow, radians, asin, acos, atan
+from math import sqrt, sin, cos, tan, exp, log, pow, radians, asin, acos, atan, degrees
+import ast
+from tkinter import simpledialog
+
+class SafeEval:
+    """A small safe evaluator for arithmetic expressions."""
+    allowed_nodes = {
+        ast.Expression, ast.BinOp, ast.UnaryOp, ast.Num,
+        ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow,
+        ast.Mod, ast.USub, ast.UAdd, ast.Load, ast.Constant
+    }
+
+    @staticmethod
+    def eval_expr(expr: str):
+        try:
+            node = ast.parse(expr, mode='eval')
+            if not all(isinstance(n, tuple(SafeEval.allowed_nodes)) for n in ast.walk(node)):
+                raise ValueError("Unsafe expression")
+            return eval(compile(node, "<string>", "eval"))
+        except Exception:
+            raise ValueError("Invalid Expression")
+
 
 class ScientificCalculatorGUI:
     def __init__(self):
@@ -7,17 +28,13 @@ class ScientificCalculatorGUI:
         self.window.title("Scientific Calculator")
         self.window.geometry("400x600")
 
-        # Create entry field
-        self.entry_field = tk.Entry(self.window, width=35, borderwidth=5)
-        self.entry_field.grid(row=0, column=0, columnspan=4)
+        # Entry field
+        self.entry_field = tk.Entry(self.window, width=35, borderwidth=5, font=("Arial", 14))
+        self.entry_field.grid(row=0, column=0, columnspan=4, pady=10)
 
-        # Number buttons
+        # Create buttons
         self.create_number_buttons()
-
-        # Basic arithmetic operation buttons
         self.create_basic_operation_buttons()
-
-        # Scientific operation buttons
         self.create_scientific_operation_buttons()
 
     def create_number_buttons(self):
@@ -25,14 +42,11 @@ class ScientificCalculatorGUI:
                         '4', '5', '6',
                         '1', '2', '3',
                         '0']
-        
-        row_val = 1
-        col_val = 0
-        
+
+        row_val, col_val = 1, 0
         for text in button_texts:
-            tk.Button(self.window, text=text, padx=40, pady=20,
+            tk.Button(self.window, text=text, padx=30, pady=20,
                       command=lambda t=text: self.append_to_entry(t)).grid(row=row_val, column=col_val)
-            
             col_val += 1
             if col_val > 2:
                 col_val = 0
@@ -42,51 +56,55 @@ class ScientificCalculatorGUI:
         operations = ['+', '-', '*', '/']
         row_val = 1
         col_val = 3
-        
+
         for op in operations:
-            tk.Button(self.window, text=op, padx=39, pady=20,
+            tk.Button(self.window, text=op, padx=30, pady=20,
                       command=lambda o=op: self.append_to_entry(o)).grid(row=row_val, column=col_val)
             row_val += 1
 
+        # Equals button
         tk.Button(self.window, text='=', padx=91, pady=20,
-                  command=self.calculate_result).grid(row=row_val, column=0, columnspan=4)
+                  command=self.calculate_result).grid(row=row_val, column=0, columnspan=2)
+
+        # Clear button
+        tk.Button(self.window, text='C', padx=91, pady=20,
+                  command=self.clear_entry).grid(row=row_val, column=2, columnspan=2)
 
     def create_scientific_operation_buttons(self):
         scientific_ops = ['sqrt', 'sin', 'cos', 'tan',
                           'exp', 'log', 'pow', 'asin',
                           'acos', 'atan']
 
-        row_val = 5
-        col_val = 0
-        
+        row_val, col_val = 6, 0
         for i, op in enumerate(scientific_ops):
             tk.Button(self.window, text=op, padx=25, pady=15,
                       command=lambda o=op: self.scientific_operation(o)).grid(row=row_val, column=col_val)
-            
             col_val += 1
             if col_val > 3:
                 col_val = 0
                 row_val += 1
 
     def append_to_entry(self, value):
-        current_value = self.entry_field.get()
+        self.entry_field.insert(tk.END, str(value))
+
+    def clear_entry(self):
         self.entry_field.delete(0, tk.END)
-        self.entry_field.insert(tk.END, str(current_value) + str(value))
 
     def calculate_result(self):
         try:
-            result = eval(self.entry_field.get())
+            expr = self.entry_field.get()
+            result = SafeEval.eval_expr(expr)
             self.entry_field.delete(0, tk.END)
             self.entry_field.insert(tk.END, str(result))
-        except Exception as e:
+        except Exception:
             self.entry_field.delete(0, tk.END)
-            self.entry_field.insert(tk.END, "Error")
+            self.entry_field.insert(tk.END, "Invalid Input")
 
     def scientific_operation(self, op):
         try:
             num = float(self.entry_field.get())
             self.entry_field.delete(0, tk.END)
-            
+
             if op == 'sqrt':
                 result = sqrt(num)
             elif op == 'sin':
@@ -100,22 +118,25 @@ class ScientificCalculatorGUI:
             elif op == 'log':
                 result = log(num)
             elif op == 'pow':
-                exponent = float(input("Enter exponent: "))
-                result = pow(num, exponent)
+                exponent = simpledialog.askfloat("Input", "Enter exponent:", parent=self.window)
+                result = pow(num, exponent) if exponent is not None else "Error"
             elif op == 'asin':
                 result = degrees(asin(num))
             elif op == 'acos':
                 result = degrees(acos(num))
             elif op == 'atan':
                 result = degrees(atan(num))
-            
+            else:
+                result = "Error"
+
             self.entry_field.insert(tk.END, str(result))
-        except Exception as e:
+        except Exception:
             self.entry_field.delete(0, tk.END)
-            self.entry_field.insert(tk.END, "Error")
+            self.entry_field.insert(tk.END, "Invalid Input")
 
     def run(self):
         self.window.mainloop()
+
 
 if __name__ == "__main__":
     calculator = ScientificCalculatorGUI()
