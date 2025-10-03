@@ -23,6 +23,9 @@ class SafeEval:
 
 
 class ScientificCalculatorGUI:
+    """
+        A scientific calculator class with various mathematical operations.
+    """
     def __init__(self):
         self.window = tk.Tk()
         self.window.title("Scientific Calculator")
