@@ -48,15 +48,25 @@ class ScientificCalculatorGUI:
         self.entry_field.delete(0, tk.END)
         self.entry_field.insert(0, current_text[:-1])
 
+    def toggle_negative(self):
+        current_text = self.entry_field.get()
+        if current_text and current_text[0] != '-':
+            self.entry_field.insert(0, '-')
+        elif current_text and current_text[0] == '-':
+            self.entry_field.delete(0, 1)
+
     def create_number_buttons(self):
         button_texts = ['7', '8', '9',
                         '4', '5', '6',
                         '1', '2', '3',
-                        None, '0', '.']
+                        "+/-", '0', '.']
 
         row_val, col_val = 2, 0
         for text in button_texts:
-            if text:
+            if text == "+/-":
+                tk.Button(self.window, text=text, padx=30, pady=20,
+                          command=self.toggle_negative).grid(row=row_val, column=col_val)
+            else:
                 tk.Button(self.window, text=text, padx=30, pady=20,
                           command=lambda t=text: self.append_to_entry(t)).grid(row=row_val, column=col_val)
             col_val += 1
