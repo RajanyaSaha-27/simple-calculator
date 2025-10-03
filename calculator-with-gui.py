@@ -65,7 +65,7 @@ class ScientificCalculatorGUI:
                 row_val += 1
 
     def create_basic_operation_buttons(self):
-        operations = ['+', '-', '*', '/']
+        operations = ['/', '*', '-', '+']
         row_val = 2
         col_val = 3
         for op in operations:
