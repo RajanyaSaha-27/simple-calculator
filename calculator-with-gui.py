@@ -35,6 +35,7 @@ class ScientificCalculatorGUI:
         self.entry_field = tk.Entry(self.window, width=35, borderwidth=5, font=("Arial", 14))
         self.entry_field.grid(row=0, column=0, columnspan=4, pady=10)
 
+        # Create buttons
         self.create_top_buttons()
         self.create_number_buttons()
         self.create_basic_operation_buttons()
