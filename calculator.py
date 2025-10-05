@@ -1,5 +1,6 @@
 import math
-from typing import Union
+from typing import Callable, Dict
+
 
 class ScientificCalculator:
     """
@@ -7,7 +8,7 @@ class ScientificCalculator:
     """
 
     def __init__(self):
-        self.operators = {
+        self.operators: Dict[str, Callable] = {
             'add': self.addition,
             'sub': self.subtraction,
             'mul': self.multiplication,
@@ -21,8 +22,11 @@ class ScientificCalculator:
             'atan': self.atan,
             'exp': self.exponent,
             'log': self.logarithm,
-            'pow': self.exponentiation
+            'pow': self.exponentiation,
+            'help': self.show_help,
         }
+
+    # ---------------- Basic Operations ---------------- #
 
     def addition(self, a: float, b: float) -> float:
         """Return the sum of two numbers."""
@@ -42,21 +46,21 @@ class ScientificCalculator:
             raise ValueError("Cannot divide by zero.")
         return a / b
 
-    def square_root(self, a: float) -> float:
-        """Return the square root of a number."""
-        if a < 0:
-            raise ValueError("Square root of negative number is undefined.")
-        return math.sqrt(a)
-
     def exponentiation(self, a: float, b: float) -> float:
-        """Return the result of raising a to the power of b."""
+        """Return a raised to the power of b."""
         return math.pow(a, b)
 
-    def logarithm(self, a: float, base: float = 10) -> float:
-        """Return the logarithm of a with the given base."""
+    def logarithm(self, a: float, base: float = math.e) -> float:
+        """Return the logarithm of a with the given base (default: natural log)."""
         if a <= 0:
             raise ValueError("Logarithm of non-positive number is undefined.")
         return math.log(a, base)
+
+    def exponent(self, a: float) -> float:
+        """Return e raised to the power of a."""
+        return math.exp(a)
+
+    # ---------------- Trigonometric Functions ---------------- #
 
     def sin(self, a: float) -> float:
         """Return the sine of an angle in degrees."""
@@ -71,33 +75,37 @@ class ScientificCalculator:
         return math.tan(math.radians(a))
 
     def asin(self, a: float) -> float:
-        """Return the arcsine of a number."""
+        """Return the arcsine of a number (in degrees)."""
         if abs(a) > 1:
             raise ValueError("Arcsine input must be between -1 and 1.")
-        return math.asin(a)
+        return math.degrees(math.asin(a))
 
     def acos(self, a: float) -> float:
-        """Return the arccosine of a number."""
+        """Return the arccosine of a number (in degrees)."""
         if abs(a) > 1:
             raise ValueError("Arccosine input must be between -1 and 1.")
-        return math.acos(a)
+        return math.degrees(math.acos(a))
 
     def atan(self, a: float) -> float:
-        """Return the arctangent of a number."""
-        return math.atan(a)
+        """Return the arctangent of a number (in degrees)."""
+        return math.degrees(math.atan(a))
 
-    def exponent(self, a: float) -> float:
-        """Return Euler's number raised to the power of a."""
-        return math.exp(a)
+    # ---------------- Misc ---------------- #
 
-    def log(self, a: float, base: float = math.e) -> float:
-        """Return the logarithm of a with the given base."""
-        if a <= 0:
-            raise ValueError("Logarithm of non-positive number is undefined.")
-        return math.log(a, base)
+    def square_root(self, a: float) -> float:
+        """Return the square root of a number."""
+        if a < 0:
+            raise ValueError("Square root of negative number is undefined.")
+        return math.sqrt(a)
+
+    def show_help(self, *_):
+        """Show available operators."""
+        return "Available operators: " + ", ".join(self.operators.keys())
+
+    # ---------------- User Interaction ---------------- #
 
     def get_number(self, prompt: str) -> float:
-        """Get a single number input from the user."""
+        """Get a number input from the user with validation."""
         while True:
             try:
                 return float(input(prompt))
@@ -107,33 +115,42 @@ class ScientificCalculator:
     def get_operator(self) -> str:
         """Get the operator input from the user."""
         while True:
-            op = input("Enter operator (add, sub, mul, div, sqrt, sin, cos, tan, asin, acos, atan, exp, log, pow): ").lower()
+            op = input("Enter operator (type 'help' to list options): ").lower()
             if op in self.operators:
                 return op
-            print("Invalid operator. Please choose one of the available options.")
+            print("Invalid operator. Try again or type 'help'.")
 
     def calculate(self) -> None:
         """Perform calculations based on user input."""
         while True:
             operator = self.get_operator()
 
+            # Single input operations
             if operator in ['sqrt', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'exp']:
                 try:
                     a = self.get_number("Enter the number: ")
                     print(f"Result: {self.operators[operator](a)}")
                 except Exception as e:
-                    print(f"An error occurred: {str(e)}")
+                    print(f"Error: {str(e)}")
+
+            # Show help (no inputs)
+            elif operator == 'help':
+                print(self.show_help())
+
+            # Double input operations
             else:
                 try:
                     a = self.get_number("Enter first number: ")
                     b = self.get_number("Enter second number: ")
                     print(f"Result: {self.operators[operator](a, b)}")
                 except Exception as e:
-                    print(f"An error occurred: {str(e)}")
+                    print(f"Error: {str(e)}")
 
             cont = input("Do you want to continue? (yes/no): ").lower()
             if cont != 'yes':
+                print("Exiting calculator. Goodbye!")
                 break
+
 
 if __name__ == "__main__":
     calc = ScientificCalculator()
