@@ -17,7 +17,7 @@ A powerful **interactive terminal-based** calculator that supports all basic and
 - 🧠 Built-in help command (`help`)  
 - 🛡️ Handles invalid inputs and division by zero gracefully  
 
-###🧾 **Example Run**
+### 🧾 **Example Run**
 ```bash
 $ python Calculator.py
 Enter operator (type 'help' to list options): add
@@ -30,11 +30,11 @@ Exiting calculator. Goodbye!
 
 ---
 
-###🖥️ GUI Mode (Calculator_with_gui.py)
+### 🖥️ GUI Mode (Calculator_with_gui.py)
 
 An elegant Tkinter-based Graphical Calculator with a neat layout, supporting real-time expression evaluation and scientific functions.
 
-###✅ Highlights
+### ✅ Highlights
 
 🔢 Fully functional number pad
 
@@ -57,7 +57,7 @@ python Calculator_with_gui.py
 
 ---
 
-###📂 Project Structure
+### 📂 Project Structure
 
 Scientific-Calculator/
 │
@@ -68,7 +68,7 @@ Scientific-Calculator/
 
 ---
 
-###⚙️ Installation & Setup
+### ⚙️ Installation & Setup
 
 1️⃣ Clone the Repository
 
@@ -86,7 +86,7 @@ python Calculator_with_gui.py
 
 ---
 
-###🧠 How It Works
+### 🧠 How It Works
 
 🔸 CLI Version:
 
@@ -111,7 +111,7 @@ Supports chained operations and dynamic exponent inputs via simpledialog.
 
 ---
 
-###🧩 Technologies Used
+### 🧩 Technologies Used
 
 Python 3.x
 
@@ -122,7 +122,7 @@ AST module (Safe evaluation)
 Math module
 
 
-###🏆 License
+### 🏆 License
 
 This project is open-source and available under the MIT License.
 
