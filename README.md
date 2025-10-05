@@ -59,11 +59,11 @@ python Calculator_with_gui.py
 
 ### 📂 Project Structure
 
-Scientific-Calculator/
+Scientific-Calculator/ <br>
 │
-├── Calculator.py                # CLI-based scientific calculator
-├── Calculator_with_gui.py       # GUI-based Tkinter calculator
-└── README.md                    # Project documentation
+├── Calculator.py                # CLI-based scientific calculator <br>
+├── Calculator_with_gui.py       # GUI-based Tkinter calculator <br>
+└── README.md                    # Project documentation <br>
 
 
 ---
